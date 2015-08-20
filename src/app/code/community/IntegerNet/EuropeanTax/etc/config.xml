@@ -20,6 +20,11 @@
             <integernet_europeantax>
                 <class>IntegerNet_EuropeanTax_Helper</class>
             </integernet_europeantax>
+            <customer>
+                <rewrite>
+                    <data>IntegerNet_EuropeanTax_Helper_Customer_Data</data>
+                </rewrite>
+            </customer>
         </helpers>
         <resources>
             <integernet_europeantax_setup>
