@@ -2,7 +2,7 @@
 <config>
     <modules>
         <IntegerNet_EuropeanTax>
-            <version>0.1.0</version>
+            <version>0.2.0</version>
         </IntegerNet_EuropeanTax>
     </modules>
     <global>
@@ -10,6 +10,11 @@
             <integernet_europeantax>
                 <class>IntegerNet_EuropeanTax_Model</class>
             </integernet_europeantax>
+            <sales>
+                <rewrite>
+                    <quote>IntegerNet_EuropeanTax_Model_Sales_Quote</quote>
+                </rewrite>
+            </sales>
         </models>
         <resources>
             <integernet_europeantax_setup>
@@ -30,5 +35,12 @@
                 </observers>
             </customer_load_after>
         </events>
+        <fieldsets>
+            <customer_address>
+                <tax_class_id>
+                    <to_quote_address>*</to_quote_address>
+                </tax_class_id>
+            </customer_address>
+        </fieldsets>
     </global>
 </config>

@@ -1,0 +1,23 @@
+<?php
+/**
+ * integer_net Magento Module
+ *
+ * @category   IntegerNet
+ * @package    IntegerNet_EuropeanTax
+ * @copyright  Copyright (c) 2015 integer_net GmbH (http://www.integer-net.de/)
+ * @author     Andreas von Studnitz <avs@integer-net.de>
+ */
+class IntegerNet_EuropeanTax_Model_Sales_Quote extends Mage_Sales_Model_Quote
+{
+    public function getCustomerTaxClassId()
+    {
+        /** @var $customer Mage_Customer_Model_Customer */
+        $customer = Mage::getSingleton('customer/session')->getCustomer();
+        if ($taxClassId = $customer->getTaxClassId()) {
+            $this->setCustomerTaxClassId($taxClassId);
+            return $this->getData('customer_tax_class_id');
+        }
+
+        return parent::getCustomerTaxClassId();
+    }
+}

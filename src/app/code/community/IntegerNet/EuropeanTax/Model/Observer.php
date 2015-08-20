@@ -11,12 +11,16 @@ class IntegerNet_EuropeanTax_Model_Observer
 {
     public function customerLoadAfter(Varien_Event_Observer $observer)
     {
+        Mage::log(__METHOD__);
         /** @var $customer Mage_Customer_Model_Customer */
         $customer = $observer->getCustomer();
         if ($shippingAddress = $customer->getDefaultShippingAddress()) {
             if ($taxClassId = $shippingAddress->getTaxClassId()) {
+                Mage::log($taxClassId);
                 $customer->setTaxClassId($taxClassId);
             }
         } 
+        
+        Mage::log(__METHOD__ . ' end');
     }
 }
