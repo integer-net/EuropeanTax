@@ -2,7 +2,7 @@
 <config>
     <modules>
         <IntegerNet_EuropeanTax>
-            <version>0.2.0</version>
+            <version>0.3.0</version>
         </IntegerNet_EuropeanTax>
     </modules>
     <global>
@@ -16,6 +16,11 @@
                 </rewrite>
             </sales>
         </models>
+        <helpers>
+            <integernet_europeantax>
+                <class>IntegerNet_EuropeanTax_Helper</class>
+            </integernet_europeantax>
+        </helpers>
         <resources>
             <integernet_europeantax_setup>
                 <setup>
@@ -43,4 +48,37 @@
             </customer_address>
         </fieldsets>
     </global>
+
+    <adminhtml>
+        <events>
+            <core_block_abstract_prepare_layout_after>
+                <observers>
+                    <integernet_europeantax>
+                        <type>singleton</type>
+                        <class>integernet_europeantax/observer</class>
+                        <method>coreBlockAbstractPrepareLayoutAfter</method>
+                    </integernet_europeantax>
+                </observers>
+            </core_block_abstract_prepare_layout_after>
+            <customer_group_save_before>
+                <observers>
+                    <integernet_europeantax>
+                        <type>singleton</type>
+                        <class>integernet_europeantax/observer</class>
+                        <method>customerGroupSaveBefore</method>
+                    </integernet_europeantax>
+                </observers>
+            </customer_group_save_before>
+
+        </events>
+        <translate>
+            <modules>
+                <integernet_europeantax>
+                    <files>
+                        <default>IntegerNet_EuropeanTax.csv</default>
+                    </files>
+                </integernet_europeantax>
+            </modules>
+        </translate>
+    </adminhtml>
 </config>
