@@ -6,6 +6,29 @@
         </IntegerNet_EuropeanTax>
     </modules>
     <global>
-
+        <models>
+            <integernet_europeantax>
+                <class>IntegerNet_EuropeanTax_Model</class>
+            </integernet_europeantax>
+        </models>
+        <resources>
+            <integernet_europeantax_setup>
+                <setup>
+                    <module>IntegerNet_EuropeanTax</module>
+                    <class>Mage_Customer_Model_Resource_Setup</class>
+                </setup>
+            </integernet_europeantax_setup>
+        </resources>
+        <events>
+            <customer_load_after>
+                <observers>
+                    <integernet_europeantax>
+                        <type>singleton</type>
+                        <class>integernet_europeantax/observer</class>
+                        <method>customerLoadAfter</method>
+                    </integernet_europeantax>
+                </observers>
+            </customer_load_after>
+        </events>
     </global>
 </config>

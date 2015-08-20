@@ -3,7 +3,7 @@
     <modules>
         <IntegerNet_EuropeanTax>
             <active>true</active>
-            <codePool>local</codePool>
+            <codePool>community</codePool>
         </IntegerNet_EuropeanTax>
     </modules>
 </config>
