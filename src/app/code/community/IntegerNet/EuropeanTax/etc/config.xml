@@ -2,7 +2,7 @@
 <config>
     <modules>
         <IntegerNet_EuropeanTax>
-            <version>0.3.0</version>
+            <version>0.4.0</version>
         </IntegerNet_EuropeanTax>
     </modules>
     <global>
@@ -39,6 +39,14 @@
                     </integernet_europeantax>
                 </observers>
             </customer_load_after>
+            <customer_address_save_after>
+                <observers>
+                    <customer_addres_after_save_viv_observer>
+                        <class>integernet_europeantax/customer_observer</class>
+                        <method>afterAddressSave</method>
+                    </customer_addres_after_save_viv_observer>
+                </observers>
+            </customer_address_save_after>
         </events>
         <fieldsets>
             <customer_address>
