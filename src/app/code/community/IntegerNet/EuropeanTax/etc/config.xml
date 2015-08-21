@@ -52,6 +52,14 @@
                     </customer_addres_after_save_viv_observer>
                 </observers>
             </customer_address_save_after>
+            <sales_quote_address_save_after>
+                <observers>
+                    <integernet_europeantax>
+                        <class>integernet_europeantax/observer</class>
+                        <method>salesQuoteAddressSaveAfter</method>
+                    </integernet_europeantax>
+                </observers>
+            </sales_quote_address_save_after>
         </events>
         <fieldsets>
             <customer_address>
@@ -94,4 +102,23 @@
             </modules>
         </translate>
     </adminhtml>
+
+    <frontend>
+        <events>
+            <sales_quote_address_collect_totals_before>
+                <observers>
+                    <sales_customer_validate_vat_number>
+                        <type>disabled</type>
+                    </sales_customer_validate_vat_number>
+                </observers>
+            </sales_quote_address_collect_totals_before>
+            <sales_quote_address_collect_totals_after>
+                <observers>
+                    <sales_customer_validate_vat_number>
+                        <type>disabled</type>
+                    </sales_customer_validate_vat_number>
+                </observers>
+            </sales_quote_address_collect_totals_after>
+        </events>
+    </frontend>
 </config>

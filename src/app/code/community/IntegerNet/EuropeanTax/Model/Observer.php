@@ -9,6 +9,11 @@
  */
 class IntegerNet_EuropeanTax_Model_Observer 
 {
+    /**
+     * VAT ID validation processed flag code
+     */
+    const VIV_PROCESSED_FLAG = 'viv_after_address_save_processed';
+
     public function customerLoadAfter(Varien_Event_Observer $observer)
     {
         /** @var $customer Mage_Customer_Model_Customer */
@@ -18,7 +23,21 @@ class IntegerNet_EuropeanTax_Model_Observer
             if ($taxClassId = $shippingAddress->getTaxClassId()) {
                 $customer->setTaxClassId($taxClassId);
             }
-        } 
+        }
+
+        if ($quoteId = Mage::getSingleton('checkout/session')->getQuoteId()) {
+            /** @var $quoteShippingAddressCollection Mage_Sales_Model_Resource_Quote_Address_Collection */
+            $quoteShippingAddressCollection = Mage::getResourceModel('sales/quote_address_collection');
+            $quoteShippingAddressCollection->addFieldToFilter('quote_id', $quoteId);
+            $quoteShippingAddressCollection->addFieldToFilter('address_type', 'shipping');
+
+            $quoteShippingAddress = $quoteShippingAddressCollection->getFirstItem();
+            if ($quoteShippingAddress->getId()) {
+                if ($taxClassId = $quoteShippingAddress->getTaxClassId()) {
+                    $customer->setTaxClassId($taxClassId);
+                }
+            }
+        }
     }
 
     public function coreBlockAbstractPrepareLayoutAfter(Varien_Event_Observer $observer)
@@ -74,17 +93,69 @@ class IntegerNet_EuropeanTax_Model_Observer
         $group->setData('tax_class_id_vat_id', Mage::app()->getRequest()->getParam('tax_class_id_vat_id'));
     }
 
-    /**
-     * Set the posted allowed payment methods on the customer group model.
-     *
-     * @param Mage_Customer_Model_Group $group
-     * @return null
-     */
-    protected function _setPaymentFilterOnGroup(Mage_Customer_Model_Group $group)
+    public function salesQuoteAddressSaveAfter(Varien_Event_Observer $observer)
     {
-        if (Mage::app()->getRequest()->getParam('payment_methods_posted')) {
-            $allowedPaymentMethds = Mage::app()->getRequest()->getParam('allowed_payment_methods');
-            $group->setAllowedPaymentMethods($allowedPaymentMethds);
+        /** @var Mage_Sales_Model_Quote_Address $quoteAddress  */
+        $quoteAddress = $observer->getQuoteAddress();
+
+        if ($quoteAddress->getAddressType() != 'shipping') {
+            return;
+        }
+
+        $customer = $quoteAddress->getQuote()->getCustomer();
+
+        if (!Mage::helper('customer/address')->isVatValidationEnabled($customer->getStore())
+            || Mage::registry(self::VIV_PROCESSED_FLAG)
+        ) {
+            return;
+        }
+
+        try {
+            Mage::register(self::VIV_PROCESSED_FLAG, true);
+
+            /** @var $customerHelper Mage_Customer_Helper_Data */
+            $customerHelper = Mage::helper('customer');
+
+            if ($quoteAddress->getVatId() == ''
+                || !Mage::helper('core')->isCountryInEU($quoteAddress->getCountry()))
+            {
+                $defaultGroupId = $customerHelper->getDefaultCustomerGroupId($customer->getStore());
+
+                if (!$customer->getDisableAutoGroupChange() && $customer->getGroupId() != $defaultGroupId) {
+                    $customerGroup = Mage::getModel('customer/group')->load($customer->getGroupId());
+                    $quoteAddress->setTaxClassId($customerGroup->getTaxClassId());
+                    $quoteAddress->save();
+                }
+            } else {
+
+                $result = $customerHelper->checkVatNumber(
+                    $quoteAddress->getCountryId(),
+                    $quoteAddress->getVatId()
+                );
+
+                if (!$customer->getDisableAutoGroupChange()) {
+                    $customerGroup = Mage::getModel('customer/group')->load($customer->getGroupId());
+                    if ($result->getIsValid()) {
+                        $quoteAddress->setTaxClassId($customerGroup->getTaxClassIdVatId());
+                    } else {
+                        $quoteAddress->setTaxClassId($customerGroup->getTaxClassId());
+                    }
+                    $quoteAddress->save();
+                }
+
+                if (!Mage::app()->getStore()->isAdmin()) {
+                    $validationMessage = Mage::helper('customer')->getVatValidationUserMessage($quoteAddress,
+                        $customer->getDisableAutoGroupChange(), $result);
+
+                    if (!$validationMessage->getIsError()) {
+                        Mage::getSingleton('customer/session')->addSuccess($validationMessage->getMessage());
+                    } else {
+                        Mage::getSingleton('customer/session')->addError($validationMessage->getMessage());
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            Mage::register(self::VIV_PROCESSED_FLAG, false, true);
         }
     }
 }
