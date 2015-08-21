@@ -9,6 +9,15 @@
  */
 class IntegerNet_EuropeanTax_Helper_Customer_Data extends Mage_Customer_Helper_Data
 {
+    /**
+     * Rewrite - Allow VAT ID to contain country code at the beginning
+     *
+     * @param string $countryCode
+     * @param string $vatNumber
+     * @param string $requesterCountryCode
+     * @param string $requesterVatNumber
+     * @return Varien_Object
+     */
     public function checkVatNumber($countryCode, $vatNumber, $requesterCountryCode = '', $requesterVatNumber = '')
     {
         if (substr($vatNumber, 0, 2) == $countryCode) {

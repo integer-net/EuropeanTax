@@ -10,7 +10,7 @@
 class IntegerNet_EuropeanTax_Model_Customer_Observer extends Mage_Customer_Model_Observer
 {
     /**
-     * Address after save event handler
+     * Validate vat id if given and assign tax class to customer address
      *
      * @param Varien_Event_Observer $observer
      */

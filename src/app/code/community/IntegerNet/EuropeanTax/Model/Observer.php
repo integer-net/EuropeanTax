@@ -14,6 +14,11 @@ class IntegerNet_EuropeanTax_Model_Observer
      */
     const VIV_PROCESSED_FLAG = 'viv_after_address_save_processed';
 
+    /**
+     * Retrieve correct tax class - from quote address, if given, otherwise from default shipping address
+     *
+     * @param Varien_Event_Observer $observer
+     */
     public function customerLoadAfter(Varien_Event_Observer $observer)
     {
         /** @var $customer Mage_Customer_Model_Customer */
@@ -40,6 +45,11 @@ class IntegerNet_EuropeanTax_Model_Observer
         }
     }
 
+    /**
+     * Add fields to customer group form
+     *
+     * @param Varien_Event_Observer $observer
+     */
     public function coreBlockAbstractPrepareLayoutAfter(Varien_Event_Observer $observer)
     {
         $block = $observer->getBlock();
@@ -82,6 +92,8 @@ class IntegerNet_EuropeanTax_Model_Observer
     }
 
     /**
+     * Handle data of new fields in customer group when saving
+     *
      * @param Varien_Event_Observer $observer
      */
     public function customerGroupSaveBefore($observer)
@@ -93,6 +105,11 @@ class IntegerNet_EuropeanTax_Model_Observer
         $group->setData('tax_class_id_vat_id', Mage::app()->getRequest()->getParam('tax_class_id_vat_id'));
     }
 
+    /**
+     * Validate vat id if given and assign tax class to quote shipping address
+     *
+     * @param Varien_Event_Observer $observer
+     */
     public function salesQuoteAddressSaveAfter(Varien_Event_Observer $observer)
     {
         /** @var Mage_Sales_Model_Quote_Address $quoteAddress  */
