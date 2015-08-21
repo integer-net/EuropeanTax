@@ -14,6 +14,7 @@ class IntegerNet_EuropeanTax_Model_Observer
         /** @var $customer Mage_Customer_Model_Customer */
         $customer = $observer->getCustomer();
         if ($shippingAddress = $customer->getDefaultShippingAddress()) {
+
             if ($taxClassId = $shippingAddress->getTaxClassId()) {
                 $customer->setTaxClassId($taxClassId);
             }
