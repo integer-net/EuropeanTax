@@ -30,7 +30,7 @@ class IntegerNet_EuropeanTax_Model_Observer
             }
         }
 
-        if ($quoteId = Mage::getSingleton('checkout/session')->getQuoteId()) {
+        if ($quoteId = $this->_getSession()->getQuoteId()) {
             /** @var $quoteShippingAddressCollection Mage_Sales_Model_Resource_Quote_Address_Collection */
             $quoteShippingAddressCollection = Mage::getResourceModel('sales/quote_address_collection');
             $quoteShippingAddressCollection->addFieldToFilter('quote_id', $quoteId);
@@ -175,4 +175,25 @@ class IntegerNet_EuropeanTax_Model_Observer
             Mage::register(self::VIV_PROCESSED_FLAG, false, true);
         }
     }
+
+    /**
+     * @return Mage_Checkout_Model_Session|Mage_Adminhtml_Model_Session_Quote
+     */
+    protected function _getSession()
+    {
+        if ($this->_isAdmin()) {
+            return Mage::getSingleton('adminhtml/session_quote');
+        }
+
+        return Mage::getSingleton('checkout/session');
+    }
+
+    /**
+     * @return bool
+     */
+    protected function _isAdmin()
+    {
+        return Mage::app()->getStore()->isAdmin() || Mage::getDesign()->getArea() == 'adminhtml';
+    }
+
 }
