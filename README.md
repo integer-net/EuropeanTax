@@ -17,6 +17,8 @@ shipping address.
 
 ![Configuration Menu](https://www.integer-net.com/download/integernet-europeantax.png)
 
+Read more about the context at [https://www.integer-net.com/tax-configuration-eu-for-b2b-and-b2c-stores/](https://www.integer-net.com/tax-configuration-eu-for-b2b-and-b2c-stores/).
+
 Requirements
 ------------
 - PHP >= 5.3.0
@@ -45,7 +47,7 @@ Any contribution is highly appreciated. The best way to contribute code is to op
 Developer
 ---------
 Andreas von Studnitz, integer_net GmbH
-[http://www.integer-net.de](http://www.integer-net.com)
+[http://www.integer-net.com](http://www.integer-net.com)
 [@integer_net](https://twitter.com/integer_net)
 
 Licence
