@@ -4,7 +4,7 @@ Tax calculation independant of customer groups, using different tax IDs for diff
 
 Facts
 -----
-- version: 0.4.0
+- version: 0.5.1
 - extension key: IntegerNet_EuropeanTax
 - [extension on GitHub](https://github.com/integer-net/EuropeanTax)
 - [direct download link](https://github.com/integer-net/EuropeanTax/archive/master.zip)

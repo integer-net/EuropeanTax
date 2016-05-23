@@ -11,7 +11,6 @@ class IntegerNet_EuropeanTax_Model_Sales_Quote extends Mage_Sales_Model_Quote
 {
     public function getCustomerTaxClassId()
     {
-        Mage::log(__METHOD__);
         if ($this->_isAdmin()) {
 
             /** @var $customer Mage_Customer_Model_Customer */
@@ -22,8 +21,6 @@ class IntegerNet_EuropeanTax_Model_Sales_Quote extends Mage_Sales_Model_Quote
             /** @var $customer Mage_Customer_Model_Customer */
             $customer = Mage::getSingleton('customer/session')->getCustomer();
         }
-
-        Mage::log($customer->debug());
 
         if ($taxClassId = $customer->getTaxClassId()) {
             $this->setCustomerTaxClassId($taxClassId);
